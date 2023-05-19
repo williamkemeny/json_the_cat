@@ -8,17 +8,18 @@ const fetchBreedDescription = function (breedName, callback) {
       const data = JSON.parse(body);
       if (error) {
         callback(error, null); // Print the error if one occurred
-        return null;
+        return;
       }
       if (response.statusCode !== 200) {
         callback("statusCode:" + response.statusCode, null); // Print the response status code if a response was received
         return;
-      } else {
-        if (data.lenghth === 0) {
-          console.log(`Breed ${breedName} not found.`);
-        }
       }
-      callback(null, data[0].description);
+
+      if (data.length === 0 || data[0] === undefined) {
+        callback(null, `Breed ${breedName} not found.`);
+      } else {
+        callback(null, data[0].description.trim()); // trim here instead of in tests
+      }
     }
   );
 };
